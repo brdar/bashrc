@@ -17,11 +17,10 @@ export PATH
 
 # check whether printf supports -v
 __git_printf_supports_v=
-printf -v __git_printf_supports_v -- '%s' yes >/dev/null 2>&1
 
 # get current branch in git repo
 function parse_git_branch() {
-	BRANCH=`git branch 2> /dev/null | sed -e '/^\[^]/d' -e 's/ \(.*\)/\1/'`
+	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/*\(.*\)/\1/'`
 	if [ ! "${BRANCH}" == "" ]
 	then
 		STAT=`parse_git_dirty`
@@ -66,17 +65,18 @@ function parse_git_dirty {
 	fi
 }
 
-PS1='\[\033[0;32m\]\[\033[0m\033[0;32m\]\u\[\033[0;36m\] @ \w\[\033[0;32m\]$(parse_git_branch)\n\[\033[0;32m\]└─\[\033[0m\033[0;32m\] \$\[\033[0m\033[0;32m\] ▶\[\033[0m\] '
-
+export PS1='\[\033[0;32m\]\[\033[0m\033[0;32m\]\u\[\033[0;36m\] @ \w\[\033[0;32m\] $(parse_git_branch)\n\[\033[0;32m\]└─\[\033[0m\033[0;32m\] \$\[\033[0m\033[0;32m\] ▶\[\033[0m\] '
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
+
+eval $(thefuck --alias fck)
 
 # User specific aliases and functions
 alias cls='clear'
 alias q='exit'
 alias dnfi='sudo dnf install'
 alias dnfu='sudo dnf update'
-alias gnb='git new branch'
+alias gnb='git checkout -b'
 alias gpsh='git push'
 alias gpl='git pull'
 alias gpo='git pull origin'
